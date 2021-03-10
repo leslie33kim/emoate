@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="text-align: center; max-width: 700px; margin: 4rem auto;">
+    <div>
+        <h1>
+            {{ target_article.title }}
+        </h1>
+        <div style="height: 2rem;">
+            <a href="{% url 'likeapp:article_like' pk=target_article.pk %}">
+                <i style = "vertical-align: middle; font-size: 1.3rem; color:#f77" class="material-icons">
+                    favorite  
+                </i>
+            </a> 
+            <span style="vertical-align: middle; font-size: 1.3rem;">
+                {{ target_article.like }}
+            </span>
+        </div>
+        <span class="btn btn-success rounded-pill col-3">
+            이모티콘 저장
+        </span>
+        <h5>
+            {{ target_article.title.writer.profile.nickname }}
+        </h5>
+        <hr>
+
+        <!-- <img style="width:100%; border-radius: 1rem; margin: 2rem 0;"
+            src="{{ target_article.image.url }}" alt=""> -->
+
+        <img style="width:100%; border-radius: 1rem; margin: 2rem 0;"
+            src="{{ target_article.image_converted.url }}" alt="">
+
+
+        <div class="text-left">
+            {{ target_article.content | safe }}
+        </div>
+
+        {% if target_article.writer == user %}
+        <a href="{% url 'articleapp:update' pk=target_article.pk %}"
+        class="btn btn-primary rounded-pill col-3">
+            Update 
+        </a>
+        <a href="{% url 'articleapp:delete' pk=target_article.pk %}"
+        class="btn btn-danger rounded-pill col-3">
+            Delete 
+        </a>
+        {% endif %}
+        <hr>
+
+        {% for comment in target_article.comment.all %}
+            {% include 'commentapp/detail.html' with comment=comment %}
+        {% endfor %}
+
+        {% include 'commentapp/create.html' with article=target_article %}
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}
