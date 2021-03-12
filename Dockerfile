@@ -2,7 +2,7 @@ From python:3.8.5
 
 WORKDIR /home/
 
-RUN echo "testing1"
+RUN echo "testing2"
 
 RUN git clone https://github.com/wkddnjswns3793/pragmaticEmo.git
 
