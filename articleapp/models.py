@@ -31,12 +31,13 @@ class Article(models.Model):
     writer = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='article', null=True)
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, related_name='article', null=True)
     title = models.CharField(max_length=200, null =True)
-    image = models.ImageField(upload_to='article/', null=False)
-    image_converted = models.ImageField(upload_to='article/converted/', null=True)
+    image = models.ImageField(upload_to='article/', null=True, blank=True)
+    image_converted = models.ImageField(upload_to='article/converted/', null=True, blank=True)
     style = models.CharField(max_length = 50, blank = True, null=True, choices=ACTION_CHOICES)
     content = models.TextField(null=True)
     created_at = models.DateField(auto_now_add=True, null=True)
     like = models.IntegerField(default=0)
+
 
     def convert_image(self, *args, **kwargs):
         image_converted = convert_rbk(self.image, self.style)
@@ -56,13 +57,13 @@ def convert_rbk(img, style):
         img = ImageOps.exif_transpose(img)
         img.save("./media/prac/0.png")
 
+
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Hayao_net_G_float.pth'))
         model.eval()
 
         img_size = 450
         img = cv2.imread('./media/prac/0.png')
-
 
         T = transforms.Compose([
             transforms.ToPILImage(),
@@ -81,22 +82,20 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite('./media/prac/1.png', img_output) 
 
-        cv2.imwrite('./media/prac/0.png', img)
         result_image = "./media/prac/2.png"
         cmd_rembg = "cat " + "./media/prac/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        dst = cv2.imread("./media/prac/0.png")                                    #원본 사진 
         src1 = cv2.imread("./media/prac/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/prac/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        h, w = dst.shape[:2]    #원본 사진의 shape
+        h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
         src = cv2.resize(src, dsize=(w, h), interpolation=cv2.INTER_AREA) #원본사진이랑 그림으로 바꾼 사진 크기 맞추기 
         for y in range (h):
             for x in range(w):
-                dst[y,x] = 255
+                img[y,x] = 255
 
         mask = src1[:, :, -1] #(1440, 666)
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -106,8 +105,8 @@ def convert_rbk(img, style):
         cv2.imwrite(i, mask1)
 
         j = "./media/prac/4.png" #마스크 픽셀 복사 
-        cv2.copyTo(src, mask1, dst)
-        cv2.imwrite(j, dst)
+        cv2.copyTo(src, mask1, img)
+        cv2.imwrite(j, img)
 
         k = "./media/prac/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
@@ -151,22 +150,20 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite('./media/prac/1.png', img_output) 
 
-        cv2.imwrite('./media/prac/0.png', img)
         result_image = "./media/prac/2.png"
         cmd_rembg = "cat " + "./media/prac/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
-            #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        dst = cv2.imread("./media/prac/0.png")                                    #원본 사진 
+        #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
         src1 = cv2.imread("./media/prac/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/prac/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        h, w = dst.shape[:2]    #원본 사진의 shape
+        h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
         src = cv2.resize(src, dsize=(w, h), interpolation=cv2.INTER_AREA) #원본사진이랑 그림으로 바꾼 사진 크기 맞추기 
         for y in range (h):
             for x in range(w):
-                dst[y,x] = 255
+                img[y,x] = 255
 
 
         mask = src1[:, :, -1] #(1440, 666)
@@ -177,8 +174,8 @@ def convert_rbk(img, style):
         cv2.imwrite(i, mask1)
 
         j = "./media/prac/4.png" #마스크 픽셀 복사 
-        cv2.copyTo(src, mask1, dst)
-        cv2.imwrite(j, dst)
+        cv2.copyTo(src, mask1, img)
+        cv2.imwrite(j, img)
 
         k = "./media/prac/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
@@ -222,22 +219,20 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite('./media/prac/1.png', img_output) 
 
-        cv2.imwrite('./media/prac/0.png', img)
         result_image = "./media/prac/2.png"
         cmd_rembg = "cat " + "./media/prac/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
             #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        dst = cv2.imread("./media/prac/0.png")                                    #원본 사진 
         src1 = cv2.imread("./media/prac/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/prac/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        h, w = dst.shape[:2]    #원본 사진의 shape
+        h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
         src = cv2.resize(src, dsize=(w, h), interpolation=cv2.INTER_AREA) #원본사진이랑 그림으로 바꾼 사진 크기 맞추기 
         for y in range (h):
             for x in range(w):
-                dst[y,x] = 255
+                img[y,x] = 255
 
         mask = src1[:, :, -1] #(1440, 666)
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
@@ -247,8 +242,8 @@ def convert_rbk(img, style):
         cv2.imwrite(i, mask1)
 
         j = "./media/prac/4.png" #마스크 픽셀 복사 
-        cv2.copyTo(src, mask1, dst)
-        cv2.imwrite(j, dst)
+        cv2.copyTo(src, mask1, img)
+        cv2.imwrite(j, img)
 
         k = "./media/prac/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
@@ -292,24 +287,22 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite('./media/prac/1.png', img_output) 
 
-        cv2.imwrite('./media/prac/0.png', img)
         result_image = "./media/prac/2.png"
         cmd_rembg = "cat " + "./media/prac/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
-            #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        dst = cv2.imread("./media/prac/0.png")                                    #원본 사진 
+            #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진                                    #원본 사진 
         src1 = cv2.imread("./media/prac/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/prac/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        h, w = dst.shape[:2]    #원본 사진의 shape
+        h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
         src = cv2.resize(src, dsize=(w, h), interpolation=cv2.INTER_AREA) #원본사진이랑 그림으로 바꾼 사진 크기 맞추기 
         for y in range (h):
             for x in range(w):
-                dst[y,x] = 255
+                img[y,x] = 255
 
-        mask = src1[:, :, -1] #(1440, 666)
+        mask = src1[:, :, -1] 
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
@@ -317,8 +310,8 @@ def convert_rbk(img, style):
         cv2.imwrite(i, mask1)
 
         j = "./media/prac/4.png" #마스크 픽셀 복사 
-        cv2.copyTo(src, mask1, dst)
-        cv2.imwrite(j, dst)
+        cv2.copyTo(src, mask1, img)
+        cv2.imwrite(j, img)
 
         k = "./media/prac/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
