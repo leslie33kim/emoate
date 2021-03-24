@@ -60,5 +60,3 @@ class ArticleListView(ListView):
     template_name = 'articleapp/list.html'
     paginate_by = 9
 
-
-
