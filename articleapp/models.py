@@ -53,11 +53,11 @@ class Article(models.Model):
 
 def convert_rbk(img, style):
     if style == "HAYAO":
-        f1 = tempfile.gettempdir()
+        # =./staticfiles/images tempfile.gettempdir()
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
+        img.save("./staticfiles/images/0.png")
 
 
         model = Transformer()
@@ -65,7 +65,7 @@ def convert_rbk(img, style):
         model.eval()
 
         img_size = 450
-        img = cv2.imread(f1+"/0.png")
+        img = cv2.imread("./staticfiles/images/0.png")
 
         T = transforms.Compose([
             transforms.ToPILImage(),
@@ -82,15 +82,15 @@ def convert_rbk(img, style):
         img_output = (img_output.squeeze().detach().numpy() + 1.) /2.
         img_output = img_output.transpose([1,2,0])
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
-        cv2.imwrite(f1+'/1.png', img_output) 
+        cv2.imwrite('./staticfiles/images/1.png', img_output) 
 
-        result_image = f1 + "/2.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        result_image = "./staticfiles/images/2.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        src1 = cv2.imread(f1+"/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(f1+"/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./staticfiles/images/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./staticfiles/images/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
         h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
@@ -103,30 +103,30 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = f1+"/3.png" #마스크
+        i = "./staticfiles/images/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = f1+"/4.png" #마스크 픽셀 복사 
+        j = "./staticfiles/images/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = f1+"/5.png"
+        k = "./staticfiles/images/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
-        os.remove(f1+'/1.png')
-        os.remove(f1+'/2.png')
-        os.remove(f1+'/0.png')
+        os.remove('./staticfiles/images/1.png')
+        os.remove('./staticfiles/images/2.png')
+        os.remove('./staticfiles/images/0.png')
         return image_to_bytes(img)
     '''
     if style == "HAYAO":
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
+        img.save("./staticfiles/images/0.png")
 
 
         model = Transformer()
@@ -134,7 +134,7 @@ def convert_rbk(img, style):
         model.eval()
 
         img_size = 450
-        img = cv2.imread(f1+'/0.png')
+        img = cv2.imread('./staticfiles/images/0.png')
 
         T = transforms.Compose([
             transforms.ToPILImage(),
@@ -151,15 +151,15 @@ def convert_rbk(img, style):
         img_output = (img_output.squeeze().detach().numpy() + 1.) /2.
         img_output = img_output.transpose([1,2,0])
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
-        cv2.imwrite(f1+'/1.png', img_output) 
+        cv2.imwrite('./staticfiles/images/1.png', img_output) 
 
-        result_image = f1+"/2.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        result_image = "./staticfiles/images/2.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        src1 = cv2.imread(f1+"/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(f1+"/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./staticfiles/images/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./staticfiles/images/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
         h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
@@ -172,39 +172,39 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = f1+"/3.png" #마스크
+        i = "./staticfiles/images/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = f1+"/4.png" #마스크 픽셀 복사 
+        j = "./staticfiles/images/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = f1+"/5.png"
+        k = "./staticfiles/images/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
-        os.remove(f1+'/1.png')
-        os.remove(f1+'/2.png')
-        os.remove(f1+'/0.png')
+        os.remove('./staticfiles/images/1.png')
+        os.remove('./staticfiles/images/2.png')
+        os.remove('./staticfiles/images/0.png')
         return image_to_bytes(img)
         '''
 
     if style == "HOSODA":
-        f1 = tempfile.gettempdir()
+        # =./staticfiles/images tempfile.gettempdir()
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
+        img.save("./staticfiles/images/0.png")
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Hosoda_net_G_float.pth'))
         model.eval()
 
         img_size = 450
-        img = cv2.imread(f1+'/0.png')
+        img = cv2.imread('./staticfiles/images/0.png')
 
 
         T = transforms.Compose([
@@ -222,15 +222,15 @@ def convert_rbk(img, style):
         img_output = (img_output.squeeze().detach().numpy() + 1.) /2.
         img_output = img_output.transpose([1,2,0])
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
-        cv2.imwrite(f1+'/1.png', img_output) 
+        cv2.imwrite('./staticfiles/images/1.png', img_output) 
 
-        result_image = f1+"/2.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        result_image = "./staticfiles/images/2.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        src1 = cv2.imread(f1+"/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(f1+"/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./staticfiles/images/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./staticfiles/images/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
         h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
@@ -244,37 +244,37 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = f1+"/3.png" #마스크
+        i = "./staticfiles/images/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = f1+"/4.png" #마스크 픽셀 복사 
+        j = "./staticfiles/images/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = f1+"/5.png"
+        k = "./staticfiles/images/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
-        os.remove(f1+'/1.png')
-        os.remove(f1+'/2.png')
-        os.remove(f1+'/0.png')
+        os.remove('./staticfiles/images/1.png')
+        os.remove('./staticfiles/images/2.png')
+        os.remove('./staticfiles/images/0.png')
         return image_to_bytes(img)
     if style == "PAPRIKA":
-        f1 = tempfile.gettempdir()
+        # =./staticfiles/images tempfile.gettempdir()
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
+        img.save("./staticfiles/images/0.png")
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Paprika_net_G_float.pth'))
         model.eval()
 
         img_size = 450
-        img = cv2.imread(f1+'/0.png')
+        img = cv2.imread('./staticfiles/images/0.png')
 
 
         T = transforms.Compose([
@@ -292,15 +292,15 @@ def convert_rbk(img, style):
         img_output = (img_output.squeeze().detach().numpy() + 1.) /2.
         img_output = img_output.transpose([1,2,0])
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
-        cv2.imwrite(f1+'/1.png', img_output) 
+        cv2.imwrite('./staticfiles/images/1.png', img_output) 
 
-        result_image = f1+"/2.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        result_image = "./staticfiles/images/2.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
             #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        src1 = cv2.imread(f1+"/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(f1+"/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./staticfiles/images/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./staticfiles/images/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
         h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
@@ -313,37 +313,37 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = f1+"/3.png" #마스크
+        i = "./staticfiles/images/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = f1+"/4.png" #마스크 픽셀 복사 
+        j = "./staticfiles/images/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = f1+"/5.png"
+        k = "./staticfiles/images/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
-        os.remove(f1+'/1.png')
-        os.remove(f1+'/2.png')
-        os.remove(f1+'/0.png')
+        os.remove('./staticfiles/images/1.png')
+        os.remove('./staticfiles/images/2.png')
+        os.remove('./staticfiles/images/0.png')
         return image_to_bytes(img)
     if style == "SHINKAI":
-        f1 = tempfile.gettempdir()
+        # =./staticfiles/images tempfile.gettempdir()
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
+        img.save("./staticfiles/images/0.png")
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Shinkai_net_G_float.pth'))
         model.eval()
 
         img_size = 450
-        img = cv2.imread(f1+'/0.png')
+        img = cv2.imread('./staticfiles/images/0.png')
 
 
         T = transforms.Compose([
@@ -361,15 +361,15 @@ def convert_rbk(img, style):
         img_output = (img_output.squeeze().detach().numpy() + 1.) /2.
         img_output = img_output.transpose([1,2,0])
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
-        cv2.imwrite(f1+'/1.png', img_output) 
+        cv2.imwrite('./staticfiles/images/1.png', img_output) 
 
-        result_image = f1+"/2.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        result_image = "./staticfiles/images/2.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
             #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진                                    #원본 사진 
-        src1 = cv2.imread(f1+"/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(f1+"/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./staticfiles/images/2.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./staticfiles/images/1.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
         h, w = img.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
@@ -382,38 +382,38 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = f1+"/3.png" #마스크
+        i = "./staticfiles/images/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = f1+"/4.png" #마스크 픽셀 복사 
+        j = "./staticfiles/images/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = f1+"/5.png"
+        k = "./staticfiles/images/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
-        os.remove(f1+'/1.png')
-        os.remove(f1+'/2.png')
-        os.remove(f1+'/0.png')
+        os.remove('./staticfiles/images/1.png')
+        os.remove('./staticfiles/images/2.png')
+        os.remove('./staticfiles/images/0.png')
         return image_to_bytes(img)
     else:
-        f1 = tempfile.gettempdir()
+        # =./staticfiles/images tempfile.gettempdir()
         img = Image.open(img)
         img = img.convert('RGB')
         img = ImageOps.exif_transpose(img)
-        img.save(f1+"/0.png")
-        result_image = f1+"/1.png"
-        cmd_rembg = "cat " + f1+"/0.png"  + " | python3 ./remvbk.py > " + result_image
+        img.save("./staticfiles/images/0.png")
+        result_image = "./staticfiles/images/1.png"
+        cmd_rembg = "cat " + "./staticfiles/images/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         img= Image.open(result_image)
 
-        os.remove(f1+"/0.png")
-        os.remove(f1+"/1.png")
+        os.remove("./staticfiles/images/0.png")
+        os.remove("./staticfiles/images/1.png")
         return image_to_bytes(img)
 
 def image_to_bytes(img):
