@@ -7,16 +7,17 @@ import cv2
 from PIL import Image, ImageOps
 from django.core.files.storage import default_storage
 import numpy as np
-from io import BytesIO
+from io import BytesIO, StringIO
 from multiselectfield import MultiSelectField
 import os 
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 import sys
 import torch 
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 from network.Transformer import Transformer
-import tempfile
+import uuid 
+
 
 
 
@@ -127,14 +128,12 @@ def convert_rbk(img, style):
         '''
 
     if style == "HAYAO":
-        default_storage.save("test/0.png",img)
-        
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
-        initial_image = settings.MEDIA_ROOT+"/test/0.png"
-        result_image1 = settings.MEDIA_ROOT +"/test/1.png"
+        img = Image.open(img) 
+        img = img.convert('RGB')
+        img = ImageOps.exif_transpose(img)
+        img.save("./media/article/test/0.png")
+        initial_image = "./media/article/test/0.png"
+        result_image1 = "./media/article/test/1.png"
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Hayao_net_G_float.pth'))
@@ -161,7 +160,7 @@ def convert_rbk(img, style):
         cv2.imwrite(result_image1, img_output) 
 
 
-        result_image2 = settings.MEDIA_ROOT +"/test/2.png"
+        result_image2 = settings.MEDIA_ROOT +"/article/test/2.png"
         cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
         os.system(cmd_rembg)
 
@@ -183,15 +182,15 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = settings.MEDIA_ROOT +"/test/3.png" #마스크
+        i = settings.MEDIA_ROOT +"/article/test/3.png" #마스크
         cv2.imwrite(i, mask1)
 
 
-        j = settings.MEDIA_ROOT +"/test/4.png" #마스크 픽셀 복사 
+        j = settings.MEDIA_ROOT +"/article/test/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = settings.MEDIA_ROOT +"/test/5.png"
+        k = settings.MEDIA_ROOT +"/article/test/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
@@ -205,13 +204,12 @@ def convert_rbk(img, style):
     
     if style == "HOSODA":
         # =./media/test tempfile.gettempdir()
-        default_storage.save("test/0.png",img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
-        initial_image = settings.MEDIA_ROOT+"/test/0.png"
-        result_image1 = settings.MEDIA_ROOT +"/test/1.png"
+        img = Image.open(img)
+        img = img.convert('RGB')
+        img = ImageOps.exif_transpose(img)
+        img.save("./media/article/test/0.png")
+        initial_image = "./media/article/test/0.png"
+        result_image1 = "./media/article/test/1.png"
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Hosoda_net_G_float.pth'))
@@ -238,7 +236,7 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        result_image2 = settings.MEDIA_ROOT+"/test/2.png"
+        result_image2 = settings.MEDIA_ROOT+"/article/test/2.png"
         cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
         os.system(cmd_rembg)
 
@@ -261,14 +259,14 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = settings.MEDIA_ROOT+"/test/3.png" #마스크
+        i = settings.MEDIA_ROOT+"/article/test/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = settings.MEDIA_ROOT+"/test/4.png" #마스크 픽셀 복사 
+        j = settings.MEDIA_ROOT+"/article/test/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = settings.MEDIA_ROOT+"/test/5.png"
+        k = settings.MEDIA_ROOT+"/article/test/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
@@ -281,20 +279,19 @@ def convert_rbk(img, style):
         return image_to_bytes(img)
     if style == "PAPRIKA":
         # =./media/test tempfile.gettempdir()
-        default_storage.save("test/0.png",img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
-        initial_image = settings.MEDIA_ROOT+"/test/0.png"
-        result_image1 = settings.MEDIA_ROOT +"/test/1.png"
+        img = Image.open(img)
+        img = img.convert('RGB')
+        img = ImageOps.exif_transpose(img)
+        img.save("./media/article/test/0.png")
+        initial_image = "./media/article/test/0.png"
+        result_image1 = "./media/article/test/1.png"
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Paprika_net_G_float.pth'))
         model.eval()
 
         img_size = 450
-        img = cv2.imread('./media/test/0.png')
+        img = cv2.imread('.media/article/test/0.png')
 
 
         T = transforms.Compose([
@@ -314,7 +311,7 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        result_image2 = settings.MEDIA_ROOT +"/test/2.png"
+        result_image2 = settings.MEDIA_ROOT +"/article/test/2.png"
         cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
         os.system(cmd_rembg)
 
@@ -336,14 +333,14 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = settings.MEDIA_ROOT +"/test/3.png" #마스크
+        i = settings.MEDIA_ROOT +"/article/test/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = settings.MEDIA_ROOT +"/test/4.png" #마스크 픽셀 복사 
+        j = settings.MEDIA_ROOT +"/article/test/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = settings.MEDIA_ROOT +"/test/5.png"
+        k = settings.MEDIA_ROOT +"/article/test/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
@@ -356,13 +353,12 @@ def convert_rbk(img, style):
         return image_to_bytes(img)
     if style == "SHINKAI":
         # =./media/test tempfile.gettempdir()
-        default_storage.save("test/0.png",img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
-        initial_image = settings.MEDIA_ROOT+"/test/0.png"
-        result_image1 = settings.MEDIA_ROOT +"/test/1.png"
+        img = Image.open(img)
+        img = img.convert('RGB')
+        img = ImageOps.exif_transpose(img)
+        img.save("./media/article/test/0.png")
+        initial_image = "./media/article/test/0.png"
+        result_image1 = "./media/article/test/1.png"
 
         model = Transformer()
         model.load_state_dict(torch.load('pretrained_model/Shinkai_net_G_float.pth'))
@@ -389,7 +385,7 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        result_image2 = settings.MEDIA_ROOT +"/test/2.png"
+        result_image2 = settings.MEDIA_ROOT +"/article/test/2.png"
         cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
         os.system(cmd_rembg)
 
@@ -411,14 +407,14 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = settings.MEDIA_ROOT +"/test/3.png" #마스크
+        i = settings.MEDIA_ROOT +"/article/test/3.png" #마스크
         cv2.imwrite(i, mask1)
 
-        j = settings.MEDIA_ROOT +"/test/4.png" #마스크 픽셀 복사 
+        j = settings.MEDIA_ROOT +"/article/test/4.png" #마스크 픽셀 복사 
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
-        k = settings.MEDIA_ROOT +"/test/5.png"
+        k = settings.MEDIA_ROOT +"/article/test/5.png"
         cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
         os.system(cmd_rembg1)
         img = Image.open(k)
@@ -430,7 +426,36 @@ def convert_rbk(img, style):
         os.remove(initial_image)
         return image_to_bytes(img)
     else:
-        # =./media/test tempfile.gettempdir()
+        img = Image.open(img)
+        img = img.convert('RGB')
+        img = ImageOps.exif_transpose(img)
+        img.save("./media/article/test/0.png")
+
+        result_image = "./media/article/test/1.png"
+
+        cmd_rembg = "cat " + "./media/article/test/0.png"  + " | python3 ./remvbk.py > " + result_image
+        os.system(cmd_rembg)
+
+        src1 = cv2.imread("./media/article/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./media/article/test/0.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+
+        h, w = src.shape[:2]    #원본 사진의 shape
+        h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
+
+        if [h,w] != [h1, w1]:
+            src1 = cv2.rotate(src1, cv2.ROTATE_90_CLOCKWISE)
+            os.remove(result_image)
+            cv2.imwrite(result_image, src1)
+
+        img= Image.open(result_image)
+
+        os.remove("./media/article/test/0.png")
+        os.remove("./media/article/test/1.png") 
+
+        return image_to_bytes(img)
+
+    """
+    else:
         default_storage.save("test/0.png",img)
         # img = Image.open(img)
         # img = img.convert('RGB')
@@ -457,10 +482,12 @@ def convert_rbk(img, style):
 
         img= Image.open(result_image)
 
+        (os.path.join(settings.BASE_DIR, 'static/img/imagen.png'))
+
         os.remove(initial_image)
         os.remove(result_image)
         return image_to_bytes(img)
-
+    """
 def image_to_bytes(img):
     output = BytesIO()
     img.save(output, format='PNG', quality=100)
