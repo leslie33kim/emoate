@@ -441,13 +441,13 @@ def convert_rbk(img, style):
         src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
 
-        h, w = src.shape[:2]    #원본 사진의 shape
-        h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
+        # h, w = src.shape[:2]    #원본 사진의 shape
+        # h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
 
-        if [h,w] != [h1, w1]:
-            src1 = cv2.rotate(src1, cv2.ROTATE_90_CLOCKWISE)
-            os.remove(result_image)
-            cv2.imwrite(result_image, src1)
+        # if [h,w] != [h1, w1]:
+        #     src1 = cv2.rotate(src1, cv2.ROTATE_90_CLOCKWISE)
+        #     os.remove(result_image)
+        #     cv2.imwrite(result_image, src1)
 
         img= Image.open(result_image)
 
