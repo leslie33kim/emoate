@@ -438,8 +438,8 @@ def convert_rbk(img, style):
         cmd_rembg = "cat " + "./media/test/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
-        src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
+        # src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        # src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
 
         # h, w = src.shape[:2]    #원본 사진의 shape
         # h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
