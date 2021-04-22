@@ -433,9 +433,12 @@ def convert_rbk(img, style):
         # img = ImageOps.exif_transpose(img)
         # img.save("./media/0.png")
 
-        result_image = "./media/test/1.png"
+        # result_image = "./media/test/1.png"
+        initial_image = settings.MEDIA_ROOT+"/test/0.png"
+        result_image = settings.MEDIA_ROOT+"/test/1.png"
+        
 
-        cmd_rembg = "cat " + "./media/test/0.png"  + " | python3 ./remvbk.py > " + result_image
+        cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
         # src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
@@ -451,8 +454,8 @@ def convert_rbk(img, style):
 
         img= Image.open(result_image)
 
-        os.remove("./media/test/0.png")
-        os.remove("./media/test/1.png")
+        os.remove(initial_image)
+        os.remove(result_image)
 
 
         return image_to_bytes(img)
