@@ -292,7 +292,7 @@ def convert_rbk(img, style):
         model.eval()
 
         img_size = 450
-        img = cv2.imread('.media/0.png')
+        img = cv2.imread('./media/0.png')
 
 
         T = transforms.Compose([
@@ -427,18 +427,19 @@ def convert_rbk(img, style):
         os.remove(initial_image)
         return image_to_bytes(img)
     else:
-        img = Image.open(img)
-        img = img.convert('RGB')
-        img = ImageOps.exif_transpose(img)
-        img.save("./media/0.png")
+        default_storage.save("test/"+"0.png", img)
+        # img = Image.open(img)
+        # img = img.convert('RGB')
+        # img = ImageOps.exif_transpose(img)
+        # img.save("./media/0.png")
 
-        result_image = "./media/1.png"
+        result_image = "./media/test/1.png"
 
-        cmd_rembg = "cat " + "./media/0.png"  + " | python3 ./remvbk.py > " + result_image
+        cmd_rembg = "cat " + "./media/test/0.png"  + " | python3 ./remvbk.py > " + result_image
         os.system(cmd_rembg)
 
-        src1 = cv2.imread("./media/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread("./media/0.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
+        src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
+        src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
 
         h, w = src.shape[:2]    #원본 사진의 shape
         h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
@@ -450,8 +451,9 @@ def convert_rbk(img, style):
 
         img= Image.open(result_image)
 
-        os.remove("./media/0.png")
-        os.remove("./media/1.png") 
+        os.remove("./media/test/0.png")
+        os.remove("./media/test/1.png")
+
 
         return image_to_bytes(img)
 
