@@ -438,8 +438,8 @@ def convert_rbk(img, style):
         result_image = settings.MEDIA_ROOT+"/test/1.png"
         
 
-        cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image
-        os.system(cmd_rembg)
+        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image
+        # os.system(cmd_rembg)
 
         # src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         # src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
