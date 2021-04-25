@@ -60,10 +60,7 @@ def convert_rbk(img, style):
     if style == "HAYAO":
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
-        # img = Image.open(img) 
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
+
         initial_image = "./media/test/0.png"
         result_image1 = "./media/test/1.png"
         result_image2 = settings.MEDIA_ROOT +"/test/2.png"
@@ -97,10 +94,6 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-
-        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
-        # os.system(cmd_rembg)
-
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
         src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread(result_image1, cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
@@ -132,9 +125,8 @@ def convert_rbk(img, style):
         result = remove(f1)
         img = Image.open(io.BytesIO(result)).convert("RGBA")
         img.save(k)
-        # cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
-        # os.system(cmd_rembg1)
-        # img = Image.open(k)
+
+        img = Image.open(k)
         os.remove(i)  
         os.remove(j)
         os.remove(k)
@@ -146,10 +138,7 @@ def convert_rbk(img, style):
     if style == "HOSODA":
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
+
         initial_image = "./media/test/0.png"
         result_image1 = "./media/test/1.png"
         result_image2 = settings.MEDIA_ROOT +"/test/2.png"
@@ -184,9 +173,6 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
-        # os.system(cmd_rembg)
-
         #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
         src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread(result_image1, cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
@@ -218,8 +204,7 @@ def convert_rbk(img, style):
         result = remove(f1)
         img = Image.open(io.BytesIO(result)).convert("RGBA")
         img.save(k)
-        # cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
-        # os.system(cmd_rembg1)
+
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
@@ -231,10 +216,7 @@ def convert_rbk(img, style):
     if style == "PAPRIKA":
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
+
         initial_image = "./media/test/0.png"
         result_image1 = "./media/test/1.png"
         result_image2 = settings.MEDIA_ROOT +"/test/2.png"
@@ -269,9 +251,6 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
-        # os.system(cmd_rembg)
-
             #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
         src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread(result_image1, cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
@@ -302,8 +281,7 @@ def convert_rbk(img, style):
         result = remove(f1)
         img = Image.open(io.BytesIO(result)).convert("RGBA")
         img.save(k)
-        # cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
-        # os.system(cmd_rembg1)
+
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
@@ -315,10 +293,7 @@ def convert_rbk(img, style):
     if style == "SHINKAI":
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/test/0.png")
+
         initial_image = "./media/test/0.png"
         result_image1 = "./media/test/1.png"
         result_image2 = settings.MEDIA_ROOT +"/test/2.png"
@@ -353,8 +328,6 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image2
-        # os.system(cmd_rembg)
 
             #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진                                    #원본 사진 
         src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
@@ -386,8 +359,7 @@ def convert_rbk(img, style):
         result = remove(f1)
         img = Image.open(io.BytesIO(result)).convert("RGBA")
         img.save(k)
-        # cmd_rembg1 = "cat " + j  + " | python3 ./remvbk.py > " + k
-        # os.system(cmd_rembg1)
+
         img = Image.open(k)
         os.remove(i)  
         os.remove(j)
@@ -399,12 +371,7 @@ def convert_rbk(img, style):
     else:
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/0.png")
 
-        # result_image = "./media/test/1.png"
         initial_image = settings.MEDIA_ROOT+"/test/0.png"
         result_image = settings.MEDIA_ROOT+"/test/1.png"
         
@@ -412,9 +379,6 @@ def convert_rbk(img, style):
         result = remove(f)
         img = Image.open(io.BytesIO(result)).convert("RGBA")
         img.save(result_image)
-
-        # cmd_rembg = "cat " + initial_image  + " | python3 ./remvbk.py > " + result_image
-        # os.system(cmd_rembg)
 
         src1 = cv2.imread("./media/test/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
         src = cv2.imread("./media/test/0.png", cv2.IMREAD_COLOR)        #원본사진 
@@ -435,40 +399,6 @@ def convert_rbk(img, style):
 
         return image_to_bytes(img)
 
-    """
-    else:
-        default_storage.save("test/0.png",img)
-        # img = Image.open(img)
-        # img = img.convert('RGB')
-        # img = ImageOps.exif_transpose(img)
-        # img.save("./media/0.png")
-        # result_image = "./media/1.png"
-        initial_image = settings.MEDIA_ROOT+"/0.png"
-        result_image = settings.MEDIA_ROOT +"/1.png"
-
-        cmd_rembg = "cat " + "./media/0.png"  + " | python3 ./remvbk.py > " + result_image
-        os.system(cmd_rembg)
-
-        # src1 = cv2.imread("./media/1.png", cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        # src = cv2.imread("./media/0.png", cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        src1 = cv2.imread(result_image, cv2.IMREAD_UNCHANGED)
-        src = cv2.imread(initial_image, cv2.IMREAD_COLOR)
-        h, w = src.shape[:2]    #원본 사진의 shape
-        h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
-
-        if [h,w] != [h1, w1]:
-            src1 = cv2.rotate(src1, cv2.ROTATE_90_CLOCKWISE)
-            os.remove(result_image)
-            cv2.imwrite(result_image, src1)
-
-        img= Image.open(result_image)
-
-        (os.path.join(settings.BASE_DIR, 'static/img/imagen.png'))
-
-        os.remove(initial_image)
-        os.remove(result_image)
-        return image_to_bytes(img)
-    """
 def image_to_bytes(img):
     output = BytesIO()
     img.save(output, format='PNG', quality=100)
