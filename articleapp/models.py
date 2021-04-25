@@ -144,6 +144,7 @@ def convert_rbk(img, style):
         return image_to_bytes(img)
     
     if style == "HOSODA":
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
         # img = Image.open(img)
         # img = img.convert('RGB')
@@ -312,6 +313,7 @@ def convert_rbk(img, style):
         os.remove(initial_image)
         return image_to_bytes(img)
     if style == "SHINKAI":
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
         # img = Image.open(img)
         # img = img.convert('RGB')
@@ -395,6 +397,7 @@ def convert_rbk(img, style):
         os.remove(initial_image)
         return image_to_bytes(img)
     else:
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         default_storage.save("test/"+"0.png", img)
         # img = Image.open(img)
         # img = img.convert('RGB')
