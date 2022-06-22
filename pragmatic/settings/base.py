@@ -14,11 +14,20 @@ from pathlib import Path
 from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages
 
-import os, environ
+import os,environ
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+CLOUDINARY_STORAGE = {
+  'CLOUD_NAME' : "pragmaticemo",
+  'API_KEY' : "344697675147922",
+  'API_SECRET' : "FtptOyFvML3XjgKxDl1PZ01xjWQ"
+}
 
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 # Application definition
 
 INSTALLED_APPS = [
@@ -36,8 +45,9 @@ INSTALLED_APPS = [
     'projectapp',
     'subscribeapp',
     'likeapp',
+    'cloudinary',
+    'cloudinary-storage'
     
-   
 ]
 
 MIDDLEWARE = [

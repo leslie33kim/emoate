@@ -22,8 +22,6 @@ import uuid
 from rembg.bg import remove
 
 
-
-
 ACTION_CHOICES = (
         ("NO_FILTER", "원본 사진"),
         ("HAYAO", "HAYAO 화풍"),
@@ -47,12 +45,15 @@ class Article(models.Model):
 
     def convert_image(self, *args, **kwargs):
         image_converted = convert_rbk(self.image, self.style)
+        
         self.image_converted = InMemoryUploadedFile(file=image_converted, 
-                                                    field_name="ImageField", 
+                                                    field_name="ImageField",
+
                                                     name=self.image.name, 
                                                     content_type='image/png', 
                                                     size=sys.getsizeof(image_converted), 
                                                     charset=None)
+                                
 
 
 
@@ -62,7 +63,7 @@ def convert_rbk(img, style):
         default_storage.save("test/"+"0.png", img)
 
         initial_image = "./media/test/0.png"
-        result_image1 = "./media/test/1.png"
+        result_image1 = ""
         result_image2 = settings.MEDIA_ROOT +"/test/2.png"
 
         f = np.fromfile(initial_image)
@@ -94,11 +95,11 @@ def convert_rbk(img, style):
         img_output = cv2.convertScaleAbs(img_output, alpha = (255.0)) 
         cv2.imwrite(result_image1, img_output) 
 
-        #0.png: 원본 사진, 1.png: 그림으로 바뀐 사진 2.png: 배경을 없앤 사진 
-        src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #배경 없앤 사진 
-        src = cv2.imread(result_image1, cv2.IMREAD_COLOR)        #그림으로 바꾼 사진 
-        h, w = img.shape[:2]    #원본 사진의 shape
-        h1, w1 = src1.shape[:2]     #배경 없앤 사진의 shape
+        #0.png: Original image, 1.png: converted image 2.png: background removed image
+        src1 = cv2.imread(result_image2, cv2.IMREAD_UNCHANGED)  #background removed
+        src = cv2.imread(result_image1, cv2.IMREAD_COLOR)        #converted image
+        h, w = img.shape[:2]    # shape of original image
+        h1, w1 = src1.shape[:2]     #shage or background removed image
 
         if [h,w] != [h1, w1]:
             src1 = cv2.rotate(src1, cv2.ROTATE_90_CLOCKWISE)
@@ -112,11 +113,11 @@ def convert_rbk(img, style):
         th, mask1 = cv2.threshold(mask, 2, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         mask1 = cv2.resize(mask1, dsize=(w,h), interpolation=cv2.INTER_AREA )
 
-        i = settings.MEDIA_ROOT +"/test/3.png" #마스크
+        i = settings.MEDIA_ROOT +"/test/3.png" #mask
         cv2.imwrite(i, mask1)
 
 
-        j = settings.MEDIA_ROOT +"/test/4.png" #마스크 픽셀 복사 
+        j = settings.MEDIA_ROOT +"/test/4.png" #copy mask pixel
         cv2.copyTo(src, mask1, img)
         cv2.imwrite(j, img)
 
