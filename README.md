@@ -1,5 +1,5 @@
 # Emoate
-Cartoonized digital images using 4 pre trained CartoonGAN models and tensorflow improving model performance adopting image masking with openCV and nearest neighbor interpolation algorithm
+Website that converts user-uploaded images into cartoon forms using 4 pre trained CartoonGAN models and improving model performance through image masking and nearest neighbor interpolation.
 
 ## Setup
 
